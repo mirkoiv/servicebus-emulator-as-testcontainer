@@ -1,0 +1,111 @@
+# default
+
+spring:
+  application:
+    name: servicebus-emulator-as-testcontainer
+  jms:
+    servicebus:
+      pricing-tier: "Standard"
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "code-client"
+  cloud:
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.1
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "code-jms"
+  cloud:
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.2
+  jms:
+    listener:
+      session:
+        transacted: false
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "code-stream-binder"
+  cloud:
+    function:
+      definition: consume
+    stream:
+      bindings:
+        consume-in-0:
+          destination: queue.3
+      servicebus:
+        bindings:
+          consume-in-0:
+            consumer:
+              auto-complete: false
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.3
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "docker-client"
+  cloud:
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.4
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "docker-jms"
+  cloud:
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.5
+  jms:
+    listener:
+      session:
+        transacted: false
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "docker-stream-binder"
+  cloud:
+    function:
+      definition: consume
+    stream:
+      bindings:
+        consume-in-0:
+          destination: queue.6
+      servicebus:
+        bindings:
+          consume-in-0:
+            consumer:
+              auto-complete: false
+    azure:
+      servicebus:
+        entity-type: queue
+        entity-name: queue.6
+
